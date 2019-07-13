@@ -51,21 +51,25 @@ class Chart extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: groupedTransactionValues.map(
-            (data) {
-              return Flexible(
-                fit: FlexFit.tight,
-                child: ChartBar(
-                  label: data['day'],
-                  spendingAmount: data['amount'],
-                  spendingPercentage: totalSpending == 0.0
-                      ? 0.0
-                      : (data['amount'] as double) / totalSpending,
-                ),
-              );
-              return Text('${data['day']}: ${data['amount']}');
-            },
-          ).toList(),
+          children: groupedTransactionValues
+              .map(
+                (data) {
+                  return Flexible(
+                    fit: FlexFit.tight,
+                    child: ChartBar(
+                      label: data['day'],
+                      spendingAmount: data['amount'],
+                      spendingPercentage: totalSpending == 0.0
+                          ? 0.0
+                          : (data['amount'] as double) / totalSpending,
+                    ),
+                  );
+                  return Text('${data['day']}: ${data['amount']}');
+                },
+              )
+              .toList()
+              .reversed
+              .toList(),
         ),
       ),
     );
