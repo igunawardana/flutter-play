@@ -82,10 +82,12 @@ class Products with ChangeNotifier {
       }),
     )
         .then((response) {
+      print('Response: ');
+      print(json.decode(response.body));
       final newProduct = Product(
         title: product.title,
         description: product.description,
-        id: DateTime.now().toString(),
+        id: json.decode(response.body)['name'],
         imageUrl: product.imageUrl,
         price: product.price,
       );
