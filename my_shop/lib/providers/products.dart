@@ -72,6 +72,7 @@ class Products with ChangeNotifier {
     const url = 'https://my-shop-ecf13.firebaseio.com/products.json';
 
     try {
+      print('before await');
       final response = await http.post(
         url,
         body: json.encode({
@@ -82,6 +83,8 @@ class Products with ChangeNotifier {
           'isFavorite': product.isFavourite
         }),
       );
+
+      print ('just after await');
 
       // .then((response) {
       print('Response: ');
@@ -105,6 +108,7 @@ class Products with ChangeNotifier {
       print(error);
       throw error;
     }
+    print('at last...');
   }
 
   void updateProduct(String id, Product newProduct) {
