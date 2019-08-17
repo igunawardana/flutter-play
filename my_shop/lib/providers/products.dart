@@ -69,7 +69,7 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> addProduct(Product product) {
-    const url = 'https://my-shop-ecf13.firebaseio.com/products.json';
+    const url = 'https://my-shop-ecf13.firebaseio.com/products.jso';
     return http
         .post(
       url,
@@ -94,6 +94,9 @@ class Products with ChangeNotifier {
       // _items.add(newProduct);
       _items.insert(0, newProduct);
       notifyListeners();
+    }).catchError((error) {
+      print(error);
+      throw error;
     });
   }
 
