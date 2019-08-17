@@ -68,20 +68,22 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> addProduct(Product product) {
-    const url = 'https://my-shop-ecf13.firebaseio.com/products.jso';
-    return http
-        .post(
-      url,
-      body: json.encode({
-        'title': product.title,
-        'description': product.description,
-        'imageUrl': product.imageUrl,
-        'price': product.price,
-        'isFavorite': product.isFavourite
-      }),
-    )
-        .then((response) {
+  Future<void> addProduct(Product product) async {
+    const url = 'https://my-shop-ecf13.firebaseio.com/products.json';
+
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'title': product.title,
+          'description': product.description,
+          'imageUrl': product.imageUrl,
+          'price': product.price,
+          'isFavorite': product.isFavourite
+        }),
+      );
+
+      // .then((response) {
       print('Response: ');
       print(json.decode(response.body));
       final newProduct = Product(
@@ -94,10 +96,15 @@ class Products with ChangeNotifier {
       // _items.add(newProduct);
       _items.insert(0, newProduct);
       notifyListeners();
-    }).catchError((error) {
+      // }).catchError((error) {
+      //   print(error);
+      //   throw error;
+      // });
+
+    } catch (error) {
       print(error);
       throw error;
-    });
+    }
   }
 
   void updateProduct(String id, Product newProduct) {
