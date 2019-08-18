@@ -137,9 +137,17 @@ class Products with ChangeNotifier {
     print('at last...');
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((product) => product.id == id);
     if (prodIndex >= 0) {
+      final url = 'https://my-shop-ecf13.firebaseio.com/products/$id.json';
+      await http.patch(url,
+          body: json.encode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'price': newProduct.price,
+          }));
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {
@@ -148,7 +156,19 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) {
-    _items.removeWhere((product) => product.id == id);
+    final url = 'https://my-shop-ecf13.firebaseio.com/products/$id';
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    var existingProduct = _items[existingProductIndex];
+    http.delete(url).then((response) {
+      if (response.statusCode >= 400) {
+        throw Exception();
+      }
+      existingProduct = null;
+    }).catchError((error) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+    });
+    _items.removeAt(existingProductIndex);
     notifyListeners();
   }
 }
